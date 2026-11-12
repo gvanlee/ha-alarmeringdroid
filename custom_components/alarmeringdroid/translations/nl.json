@@ -94,5 +94,12 @@
       "title": "Zone niet gevonden",
       "description": "De zone {zone} van zoekopdracht “{search}” bestaat niet meer of heeft geen coördinaten. Herstel de zone of kies een andere zone in de opties van de zoekopdracht. De laatst bekende postcode wordt nog gebruikt."
     }
+  },
+  "entity": {
+    "sensor": {
+      "most_recent_message": {
+        "name": "Laatste melding"
+      }
+    }
   }
 }

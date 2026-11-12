@@ -94,5 +94,12 @@
       "title": "Zone not found",
       "description": "The zone {zone} used by search “{search}” no longer exists or has no coordinates. Restore the zone or choose another zone in the search options. The last known postcode is still used."
     }
+  },
+  "entity": {
+    "sensor": {
+      "most_recent_message": {
+        "name": "Most recent message"
+      }
+    }
   }
 }
