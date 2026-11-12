@@ -1,0 +1,148 @@
+{
+  "meldingen": [
+    {
+      "id": "26341795",
+      "melding": "A2 (dia: ja) 10188 Rit 171146 Hof van Luxemburg Alkmaar",
+      "tekstmelding": "Ambulance met gepaste spoed naar Hof van Luxemburg, Alkmaar",
+      "dienstid": "3",
+      "regioid": "9",
+      "dienst": "Ambulance",
+      "regio": "Kennemerland",
+      "plaats": "1825TA  Alkmaar",
+      "postcode": "1825TA",
+      "straat": "Hof van luxemburg",
+      "datum": "12-11",
+      "tijd": "17:15",
+      "lat": "52.65706",
+      "lon": "4.75691",
+      "prio1": "0",
+      "brandinfo": null,
+      "grip": "0",
+      "capcodes": [
+        {
+          "capcode": "126999",
+          "omschrijving": "Monitorcode"
+        },
+        {
+          "capcode": "2029581",
+          "omschrijving": "???"
+        },
+        {
+          "capcode": "220188",
+          "omschrijving": "Ambulance 10-188 (Alkmaar / De Mossel)"
+        }
+      ],
+      "capstring": "126999: Monitorcode\n2029581: ???\n220188: Ambulance 10-188 (Alkmaar / De Mossel)",
+      "details": ""
+    },
+    {
+      "id": "26341527",
+      "melding": "A2 11132 Rit 171114 VWS Wormerveer Industrieweg Wormerveer",
+      "tekstmelding": "Ambulance met gepaste spoed naar Industrieweg, Wormerveer",
+      "dienstid": "3",
+      "regioid": "4",
+      "dienst": "Ambulance",
+      "regio": "Zaanstreek-Waterland",
+      "plaats": "1521NA  Wormerveer",
+      "postcode": "1521NA",
+      "straat": "Industrieweg",
+      "datum": "12-11",
+      "tijd": "16:23 - 17:06",
+      "lat": "52.49989",
+      "lon": "4.77685",
+      "prio1": "0",
+      "brandinfo": null,
+      "grip": "0",
+      "capcodes": [
+        {
+          "capcode": "0123132",
+          "omschrijving": "Ambulance 11-132"
+        },
+        {
+          "capcode": "126999",
+          "omschrijving": "Monitorcode"
+        },
+        {
+          "capcode": "2029577",
+          "omschrijving": "???"
+        }
+      ],
+      "capstring": "0123132: Ambulance 11-132\n126999: Monitorcode\n2029577: ???",
+      "details": "",
+      "subitems": [
+        {
+          "id": "26341755",
+          "melding": "A2 12157 Rit 171141 VWS Wormerveer Industrieweg Wormerveer",
+          "tekstmelding": "Ambulance met gepaste spoed naar Industrieweg, Wormerveer",
+          "dienstid": "3",
+          "regioid": "9",
+          "dienst": "Ambulance",
+          "regio": "Kennemerland",
+          "plaats": "1521NA  Wormerveer",
+          "postcode": "1521NA",
+          "straat": "Industrieweg",
+          "datum": "12-11",
+          "tijd": "17:06",
+          "lat": "52.49989",
+          "lon": "4.77685",
+          "prio1": "0",
+          "brandinfo": null,
+          "grip": "0",
+          "capcodes": [
+            {
+              "capcode": "126157",
+              "omschrijving": "Ambulance 12-157 (Post Heemskerk/Velsen)"
+            },
+            {
+              "capcode": "126999",
+              "omschrijving": "Monitorcode"
+            },
+            {
+              "capcode": "2029577",
+              "omschrijving": "???"
+            }
+          ],
+          "capstring": "126157: Ambulance 12-157 (Post Heemskerk/Velsen)\n126999: Monitorcode\n2029577: ???",
+          "details": ""
+        }
+      ]
+    },
+    {
+      "id": "26341710",
+      "melding": "P 2 BNH-01 Stank/hind. lucht Bellinistraat Heemskerk 122130",
+      "tekstmelding": "Brandweer met gepaste spoed naar Bellinistraat, Heemskerk, voor een overigen",
+      "dienstid": "2",
+      "regioid": "9",
+      "dienst": "Brandweer",
+      "regio": "Kennemerland",
+      "plaats": "1962CB  Heemskerk",
+      "postcode": "1962CB",
+      "straat": "Bellinistraat",
+      "datum": "12-11",
+      "tijd": "16:59",
+      "lat": "52.51670",
+      "lon": "4.67303",
+      "prio1": "0",
+      "brandinfo": "overigen",
+      "grip": "0",
+      "capcodes": [
+        {
+          "capcode": "107500",
+          "omschrijving": "Commandant / Heemskerk"
+        },
+        {
+          "capcode": "107581",
+          "omschrijving": "Lichtkrant kazerne / Heemskerk"
+        },
+        {
+          "capcode": "108999",
+          "omschrijving": "Monitorcode / Badhoevedorp"
+        }
+      ],
+      "capstring": "107500: Commandant / Heemskerk\n107581: Lichtkrant kazerne / Heemskerk\n108999: Monitorcode / Badhoevedorp",
+      "details": "Type: overigen"
+    }
+  ],
+  "high_id": "26341810",
+  "prev_high_id": -1
+}

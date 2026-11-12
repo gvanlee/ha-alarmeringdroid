@@ -1,0 +1,3 @@
+{
+  "sql": "select pc.spostcode, pl.splaatsnaam from postcodes pc join plaatsen pl on pc.idplaats = pl.idplaats where nlat is not null and nlon is not null  and nlat > 0.095 and nlat < 0.105 order by abs(nlat - 0.1) * abs(nlat - 0.1) + abs(nlon - 0.1) * abs(nlon - 0.1) limit 1"
+}

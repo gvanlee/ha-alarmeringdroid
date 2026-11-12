@@ -1,0 +1,41 @@
+{
+  "meldingen": [
+    {
+      "id": "26341795",
+      "melding": "A2 (dia: ja) 10188 Rit 171146 Hof van Luxemburg Alkmaar",
+      "tekstmelding": "Ambulance met gepaste spoed naar Hof van Luxemburg, Alkmaar",
+      "dienstid": "3",
+      "regioid": "9",
+      "dienst": "Ambulance",
+      "regio": "Kennemerland",
+      "plaats": "1825TA  Alkmaar",
+      "postcode": "1825TA",
+      "straat": "Hof van luxemburg",
+      "datum": "12-11",
+      "tijd": "17:15",
+      "lat": "52.65706",
+      "lon": "4.75691",
+      "prio1": "0",
+      "brandinfo": null,
+      "grip": "0",
+      "capcodes": [
+        {
+          "capcode": "126999",
+          "omschrijving": "Monitorcode"
+        },
+        {
+          "capcode": "2029581",
+          "omschrijving": "???"
+        },
+        {
+          "capcode": "220188",
+          "omschrijving": "Ambulance 10-188 (Alkmaar / De Mossel)"
+        }
+      ],
+      "capstring": "126999: Monitorcode\n2029581: ???\n220188: Ambulance 10-188 (Alkmaar / De Mossel)",
+      "details": ""
+    }
+  ],
+  "high_id": null,
+  "prev_high_id": -1
+}
