@@ -67,8 +67,9 @@ class AlarmeringDroidCoordinator(DataUpdateCoordinator[Message | None]):
             result = await self._client.find(build_find_filter(cfg, zone_pc, minid))
         except ApiError as err:
             self._failures += 1
+            backoff = min(cfg.scan_interval * 2**self._failures, MAX_BACKOFF)
             self.update_interval = timedelta(
-                seconds=min(cfg.scan_interval * 2**self._failures, MAX_BACKOFF)
+                seconds=max(cfg.scan_interval, backoff)
             )
             raise UpdateFailed(str(err)) from err
 
@@ -79,7 +80,9 @@ class AlarmeringDroidCoordinator(DataUpdateCoordinator[Message | None]):
         if not self._primed:
             latest = self.tracker.prime(messages)
             self.tracker.advance(result.high_id)
-            self._primed = True
+            # Without a cursor the next poll would be an unbounded scan; stay
+            # unprimed (silent) until the server gives us a starting point.
+            self._primed = self.tracker.cursor is not None
             return latest
 
         new = self.tracker.process(messages)

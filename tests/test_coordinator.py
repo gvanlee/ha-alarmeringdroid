@@ -107,7 +107,23 @@ async def test_no_new_keeps_data(hass: HomeAssistant) -> None:
     assert events == []
 
 
-async def test_empty_first_poll_still_primes(hass: HomeAssistant) -> None:
+async def test_empty_first_poll_with_high_id_primes(hass: HomeAssistant) -> None:
+    client = MagicMock()
+    client.find = AsyncMock(return_value=result(high_id=19))
+    coord = make(hass, client)
+    await coord.async_refresh()
+    events = async_capture_events(hass, EVENT_MESSAGE)
+    client.find.return_value = result(raw(20))
+    await coord.async_refresh()
+    await hass.async_block_till_done()
+    assert client.find.await_args.args[0]["minid"] == 19
+    assert len(events) == 1
+
+
+async def test_empty_first_poll_without_cursor_stays_unprimed(
+    hass: HomeAssistant,
+) -> None:
+    """Without a cursor, polls stay unprimed (silent) instead of minid-less scans."""
     client = MagicMock()
     client.find = AsyncMock(return_value=result())
     coord = make(hass, client)
@@ -116,6 +132,13 @@ async def test_empty_first_poll_still_primes(hass: HomeAssistant) -> None:
     client.find.return_value = result(raw(20))
     await coord.async_refresh()
     await hass.async_block_till_done()
+    assert "minid" not in client.find.await_args.args[0]
+    assert events == []
+    assert coord.data.id == 20
+    client.find.return_value = result(raw(21))
+    await coord.async_refresh()
+    await hass.async_block_till_done()
+    assert client.find.await_args.args[0]["minid"] == 20
     assert len(events) == 1
 
 
@@ -146,6 +169,15 @@ async def test_backoff(hass: HomeAssistant) -> None:
     await coord.async_refresh()
     assert coord.last_update_success is True
     assert coord.update_interval == timedelta(seconds=60)
+
+
+async def test_backoff_never_shortens_long_interval(hass: HomeAssistant) -> None:
+    client = MagicMock()
+    client.find = AsyncMock(side_effect=ApiConnectionError("down"))
+    coord = make(hass, client, config(scan_interval=3600))
+    for _ in range(3):
+        await coord.async_refresh()
+        assert coord.update_interval == timedelta(seconds=3600)
 
 
 async def test_zone_unresolved_no_request(hass: HomeAssistant) -> None:
@@ -217,7 +249,7 @@ async def test_incident_prio1_on_followup_of_prio1_thread(
     hass: HomeAssistant,
 ) -> None:
     client = MagicMock()
-    client.find = AsyncMock(return_value=result())
+    client.find = AsyncMock(return_value=result(high_id=29))
     coord = make(hass, client)
     await coord.async_refresh()
     events = async_capture_events(hass, EVENT_MESSAGE)
