@@ -41,6 +41,7 @@
       }
     },
     "error": {
+      "name_required": "Geef deze zoekopdracht een naam.",
       "invalid_postcode": "Ongeldige postcode. Gebruik 4 cijfers, eventueel gevolgd door 2 letters.",
       "invalid_capcode": "Ongeldige capcode. Gebruik 6 tot 9 cijfers.",
       "zone_not_found": "Zone niet gevonden of zonder coördinaten.",

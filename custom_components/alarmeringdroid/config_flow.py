@@ -219,14 +219,18 @@ class AlarmeringDroidConfigFlow(ConfigFlow, domain=DOMAIN):
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Ask for the search name."""
+        errors: dict[str, str] = {}
         if user_input is not None:
             self._name = user_input[CONF_NAME].strip()
-            return await self.async_step_filters()
+            if self._name:
+                return await self.async_step_filters()
+            errors[CONF_NAME] = "name_required"
         return self.async_show_form(
             step_id="user",
             data_schema=vol.Schema(
                 {vol.Required(CONF_NAME): vol.All(str, vol.Length(min=1))}
             ),
+            errors=errors,
         )
 
     async def async_step_filters(

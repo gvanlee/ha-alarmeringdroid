@@ -245,3 +245,25 @@ async def test_schemas_serialize(hass: HomeAssistant) -> None:
         assert voluptuous_serialize.convert(
             schema, custom_serializer=cv.custom_serializer
         )
+
+
+async def test_whitespace_name_rejected(hass: HomeAssistant) -> None:
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": SOURCE_USER}
+    )
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {"name": "   "}
+    )
+    assert result["type"] == FlowResultType.FORM
+    assert result["step_id"] == "user"
+    assert result["errors"] == {"name": "name_required"}
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {"name": "  Thuis  "}
+    )
+    assert result["step_id"] == "filters"
+
+
+def test_name_required_error_translated() -> None:
+    for p in ("strings.json", "translations/en.json", "translations/nl.json"):
+        data = json.loads((BASE / p).read_text())
+        assert data["config"]["error"]["name_required"]

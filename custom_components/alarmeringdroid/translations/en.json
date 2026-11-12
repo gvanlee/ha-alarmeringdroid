@@ -41,6 +41,7 @@
       }
     },
     "error": {
+      "name_required": "Enter a name for this search.",
       "invalid_postcode": "Invalid postcode. Use 4 digits, optionally followed by 2 letters.",
       "invalid_capcode": "Invalid capcode. Use 6 to 9 digits.",
       "zone_not_found": "Zone not found or without coordinates.",
