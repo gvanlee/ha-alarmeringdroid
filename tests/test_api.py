@@ -117,3 +117,15 @@ async def test_lookup_postcode_missing(client, aioclient_mock):
         POSTCODE, text=load("postcode_missing.json")
     )
     assert await client.lookup_postcode(0.1, 0.1) is None
+
+
+async def test_find_undecodable_body(client, aioclient_mock):
+    aioclient_mock.get(FIND, content=b"\xff\xfe\x80\x81 not json")
+    with pytest.raises(ApiResponseError):
+        await client.find({})
+
+
+async def test_lookup_undecodable_body(client, aioclient_mock):
+    aioclient_mock.get(POSTCODE, content=b"\xff\xfe\x80\x81 not json")
+    with pytest.raises(ApiResponseError):
+        await client.lookup_postcode(52.37, 4.89)

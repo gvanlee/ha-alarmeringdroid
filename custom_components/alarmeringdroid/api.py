@@ -69,7 +69,7 @@ class AlarmeringDroidClient:
             ) as resp:
                 if resp.status != 200:
                     raise ApiConnectionError(f"HTTP status {resp.status}")
-                text = await resp.text()
+                text = await resp.text(errors="replace")
         except (aiohttp.ClientError, TimeoutError) as err:
             raise ApiConnectionError(f"Request failed: {err!r}") from err
 
