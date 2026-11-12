@@ -49,7 +49,7 @@ AlarmeringDroid is a free service run by volunteers. The interval is never lower
 
 ## Entities
 
-Each search has one sensor, **Most recent message** (`sensor.<name>_most_recent_message`, "Laatste melding" in Dutch). Its state is the message text (at most 255 characters, unknown until a message is seen); the full data is in the attributes. The sensor is unavailable while the API cannot be reached.
+Each search has one sensor, **Most recent message** ("Laatste melding" in Dutch). Its entity ID is based on the name in the language Home Assistant used when the search was added: `sensor.<name>_most_recent_message` in English, `sensor.<name>_laatste_melding` in Dutch. Check **Settings > Devices & services > Entities** for the exact ID. Its state is the message text (at most 255 characters, unknown until a message is seen); the full data is in the attributes. The sensor is unavailable while the API cannot be reached.
 
 ## Event
 
@@ -94,11 +94,15 @@ The title is "service – place", the message is the full text, and tapping the 
 type: markdown
 title: Latest P2000
 content: >
-  **{{ state_attr('sensor.home_5_km_most_recent_message', 'dienst') }}**
-  – {{ state_attr('sensor.home_5_km_most_recent_message', 'plaats') }}
-  ({{ as_timestamp(state_attr('sensor.home_5_km_most_recent_message', 'timestamp')) | timestamp_custom('%d-%m %H:%M') }})
+  {% set s = 'sensor.home_5_km_most_recent_message' %}
+  {% if state_attr(s, 'timestamp') %}
+  **{{ state_attr(s, 'dienst') }}** – {{ state_attr(s, 'plaats') }}
+  ({{ as_timestamp(state_attr(s, 'timestamp')) | timestamp_custom('%d-%m %H:%M') }})
 
-  {{ states('sensor.home_5_km_most_recent_message') }}
+  {{ states(s) }}
+  {% else %}
+  No messages yet.
+  {% endif %}
 ```
 
 Replace the entity ID with the one of your search.

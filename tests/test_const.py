@@ -29,3 +29,13 @@ def test_tables():
     assert 0 not in REGIOS and REGIOS[9] == "Kennemerland" and len(REGIOS) == 25
     assert set(DIENSTEN) == {1, 2, 3, 4, 5}
     assert MIN_SCAN_INTERVAL == 15 and DEFAULT_SCAN_INTERVAL == 60
+
+
+def test_manifest_after_dependencies_and_key_order():
+    manifest = json.loads(
+        (ROOT / "custom_components/alarmeringdroid/manifest.json").read_text()
+    )
+    assert manifest["after_dependencies"] == ["zone"]
+    keys = list(manifest)
+    assert keys[:2] == ["domain", "name"]
+    assert keys[2:] == sorted(keys[2:])

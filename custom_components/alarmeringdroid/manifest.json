@@ -1,6 +1,7 @@
 {
   "domain": "alarmeringdroid",
   "name": "AlarmeringDroid P2000",
+  "after_dependencies": ["zone"],
   "codeowners": ["@OWNER"],
   "config_flow": true,
   "dependencies": [],
