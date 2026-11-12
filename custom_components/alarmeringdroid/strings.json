@@ -1,0 +1,12 @@
+{
+  "issues": {
+    "zone_no_postcode": {
+      "title": "Zone center has no known postcode",
+      "description": "The center of {zone} (search “{search}”) is not near a known postcode. Move the zone center or add a postcode to the search. The last known postcode is still used."
+    },
+    "zone_missing": {
+      "title": "Zone not found",
+      "description": "The zone {zone} used by search “{search}” no longer exists or has no coordinates. Restore the zone or choose another zone in the search options. The last known postcode is still used."
+    }
+  }
+}

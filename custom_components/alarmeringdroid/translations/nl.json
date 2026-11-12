@@ -1,0 +1,12 @@
+{
+  "issues": {
+    "zone_no_postcode": {
+      "title": "Zonemidden heeft geen bekende postcode",
+      "description": "Het midden van {zone} (zoekopdracht “{search}”) ligt niet in de buurt van een bekende postcode. Verplaats het midden van de zone of voeg een postcode toe aan de zoekopdracht. De laatst bekende postcode wordt nog gebruikt."
+    },
+    "zone_missing": {
+      "title": "Zone niet gevonden",
+      "description": "De zone {zone} van zoekopdracht “{search}” bestaat niet meer of heeft geen coördinaten. Herstel de zone of kies een andere zone in de opties van de zoekopdracht. De laatst bekende postcode wordt nog gebruikt."
+    }
+  }
+}
