@@ -32,13 +32,13 @@ class Tracker:
             return False
         if cfg.regios and message.regio_id not in cfg.regios and not lifeliner:
             return False
-        if (
-            cfg.prio1_only
-            and not message.prio1
-            and message.thread_id not in self.prio_threads
-        ):
+        if cfg.prio1_only and not self.in_prio_incident(message):
             return False
         return True
+
+    def in_prio_incident(self, message: Message) -> bool:
+        """Return True if the message or its incident thread is priority 1."""
+        return message.prio1 or message.thread_id in self.prio_threads
 
     def _register_prio(self, messages: list[Message]) -> None:
         for m in messages:

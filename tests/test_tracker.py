@@ -151,3 +151,13 @@ def test_prio_threads_bounded():
     t.process([msg(i, prio1=True) for i in range(1, 1501)])
     assert len(t.prio_threads) <= 1000
     assert 1500 in t.prio_threads
+
+
+def test_in_prio_incident():
+    t = Tracker(config())
+    t.prime([])
+    t.process([msg(10, prio1=True), msg(11, parent=10), msg(20)])
+    assert t.in_prio_incident(msg(11, parent=10)) is True
+    assert t.in_prio_incident(msg(10, prio1=True)) is True
+    assert t.in_prio_incident(msg(20)) is False
+    assert t.in_prio_incident(msg(21, prio1=True)) is True

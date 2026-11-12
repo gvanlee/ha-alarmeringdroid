@@ -22,7 +22,9 @@ blueprint:
             - integration: mobile_app
     only_prio1:
       name: Only priority 1
-      description: Only notify for priority 1 messages.
+      description: >-
+        Only notify for priority 1 incidents. Follow-up messages in an incident
+        that started as priority 1 are included.
       default: false
       selector:
         boolean:
@@ -47,9 +49,9 @@ variables:
 
 conditions:
   - condition: template
-    value_template: "{{ search == '' or trigger.event.data.entry_id == search }}"
+    value_template: "{{ not search or trigger.event.data.entry_id == search }}"
   - condition: template
-    value_template: "{{ not only_prio1 or trigger.event.data.prio1 }}"
+    value_template: "{{ not only_prio1 or trigger.event.data.incident_prio1 }}"
   - condition: template
     value_template: "{{ include_followups or not trigger.event.data.is_followup }}"
 

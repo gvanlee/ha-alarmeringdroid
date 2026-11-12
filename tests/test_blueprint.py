@@ -26,3 +26,14 @@ def test_blueprint_valid():
     )
     assert data["blueprint"]["source_url"].endswith("notify_p2000.yaml")
     assert data["triggers"][0]["event_type"] == "alarmeringdroid_message"
+
+
+def test_blueprint_conditions():
+    data = loader.load_yaml(str(BLUEPRINT))
+    templates = [c["value_template"] for c in data["conditions"]]
+    # A cleared search selector may yield null instead of "".
+    assert any("not search or" in t for t in templates)
+    assert not any("search == ''" in t for t in templates)
+    # Prio-1 filter follows the incident, not just the single message.
+    assert any("trigger.event.data.incident_prio1" in t for t in templates)
+    assert not any("trigger.event.data.prio1" in t for t in templates)

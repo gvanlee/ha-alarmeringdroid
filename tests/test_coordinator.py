@@ -211,3 +211,25 @@ async def test_cursor_advances_to_high_id(hass: HomeAssistant) -> None:
     client.find.return_value = result(high_id=999)
     await coord.async_refresh()
     assert client.find.await_args.args[0]["minid"] == 999
+
+
+async def test_incident_prio1_on_followup_of_prio1_thread(
+    hass: HomeAssistant,
+) -> None:
+    client = MagicMock()
+    client.find = AsyncMock(return_value=result())
+    coord = make(hass, client)
+    await coord.async_refresh()
+    events = async_capture_events(hass, EVENT_MESSAGE)
+    client.find.return_value = result({**raw(30), "prio1": "1"})
+    await coord.async_refresh()
+    client.find.return_value = result(
+        {**raw(30), "prio1": "1", "subitems": [raw(31)]}
+    )
+    await coord.async_refresh()
+    client.find.return_value = result(raw(40))
+    await coord.async_refresh()
+    await hass.async_block_till_done()
+    assert [e.data["id"] for e in events] == [30, 31, 40]
+    assert [e.data["prio1"] for e in events] == [True, False, False]
+    assert [e.data["incident_prio1"] for e in events] == [True, True, False]

@@ -91,6 +91,7 @@ class AlarmeringDroidCoordinator(DataUpdateCoordinator[Message | None]):
                     "entry_id": self._entry.entry_id,
                     "search_name": cfg.name,
                     "is_followup": m.is_followup,
+                    "incident_prio1": self.tracker.in_prio_incident(m),
                     **m.as_attributes(),
                 },
             )

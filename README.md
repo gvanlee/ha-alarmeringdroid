@@ -60,6 +60,7 @@ For every new message the event `alarmeringdroid_message` is fired. Its data con
 | `entry_id` | Config entry ID of the search that matched. |
 | `search_name` | Name of that search. |
 | `is_followup` | `true` when the message is a follow-up in an existing incident. |
+| `incident_prio1` | `true` when the message or its incident thread is priority 1 (also for priority 0 follow-ups of a priority 1 incident). |
 | `id` | Message ID. |
 | `melding` | Full message text. |
 | `dienst`, `dienst_id` | Service name and number (1 Politie, 2 Brandweer, 3 Ambulance, 4 KNRM, 5 Lifeliner). |
@@ -82,7 +83,7 @@ The blueprint "P2000 message → notification" sends a notification via the Home
 
 - **Search**: which search to react to (empty = all).
 - **Device to notify**: a mobile app device.
-- **Only priority 1**: default off.
+- **Only priority 1**: default off. Follows the incident (`incident_prio1`), so follow-ups of a priority 1 incident are notified too.
 - **Include follow-ups**: default on.
 
 The title is "service – place", the message is the full text, and tapping the notification opens the message on alarmeringdroid.nl.
