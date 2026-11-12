@@ -1,4 +1,90 @@
 {
+  "config": {
+    "step": {
+      "user": {
+        "title": "New search",
+        "description": "Give this search a name. You can add multiple searches.",
+        "data": {
+          "name": "Name"
+        }
+      },
+      "filters": {
+        "title": "Filters",
+        "description": "All filters combine: a message must match every filled-in filter. Within one filter (e.g. two regios) any value matches. Postcodes and the zone use a 5 km radius and count as one location filter.",
+        "data": {
+          "regios": "Regios",
+          "diensten": "Services",
+          "postcodes": "Postcodes",
+          "capcodes": "Capcodes",
+          "zone": "Zone",
+          "prio1_only": "Priority 1 only",
+          "all_lifeliners": "All Lifeliner messages, nationwide (any regio)"
+        },
+        "data_description": {
+          "regios": "Only messages from these regios.",
+          "diensten": "Only messages for these services (police, fire brigade, ...).",
+          "postcodes": "Comma separated, 4 digits or 4 digits and 2 letters, e.g. 1234AB, 5678. Radius 5 km.",
+          "capcodes": "Comma separated, 6 to 9 digits.",
+          "zone": "Use the postcode at the center of this zone (radius 5 km).",
+          "prio1_only": "Only report priority 1 messages.",
+          "all_lifeliners": "Also report every Lifeliner message, regardless of regio."
+        }
+      },
+      "interval": {
+        "title": "Update interval",
+        "data": {
+          "scan_interval": "Update interval (seconds)"
+        },
+        "data_description": {
+          "scan_interval": "How often to check for new messages (minimum 15)."
+        }
+      }
+    },
+    "error": {
+      "invalid_postcode": "Invalid postcode. Use 4 digits, optionally followed by 2 letters.",
+      "invalid_capcode": "Invalid capcode. Use 6 to 9 digits.",
+      "zone_not_found": "Zone not found or without coordinates.",
+      "zone_no_postcode": "The center of this zone has no known postcode.",
+      "no_location_filter": "Fill in at least one of regio, postcode, capcode or zone.",
+      "cannot_connect": "Could not reach AlarmeringDroid."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Search options",
+        "description": "All filters combine: a message must match every filled-in filter. Within one filter (e.g. two regios) any value matches. Postcodes and the zone use a 5 km radius and count as one location filter.",
+        "data": {
+          "regios": "Regios",
+          "diensten": "Services",
+          "postcodes": "Postcodes",
+          "capcodes": "Capcodes",
+          "zone": "Zone",
+          "prio1_only": "Priority 1 only",
+          "all_lifeliners": "All Lifeliner messages, nationwide (any regio)",
+          "scan_interval": "Update interval (seconds)"
+        },
+        "data_description": {
+          "regios": "Only messages from these regios.",
+          "diensten": "Only messages for these services (police, fire brigade, ...).",
+          "postcodes": "Comma separated, 4 digits or 4 digits and 2 letters, e.g. 1234AB, 5678. Radius 5 km.",
+          "capcodes": "Comma separated, 6 to 9 digits.",
+          "zone": "Use the postcode at the center of this zone (radius 5 km).",
+          "prio1_only": "Only report priority 1 messages.",
+          "all_lifeliners": "Also report every Lifeliner message, regardless of regio.",
+          "scan_interval": "How often to check for new messages (minimum 15)."
+        }
+      }
+    },
+    "error": {
+      "invalid_postcode": "Invalid postcode. Use 4 digits, optionally followed by 2 letters.",
+      "invalid_capcode": "Invalid capcode. Use 6 to 9 digits.",
+      "zone_not_found": "Zone not found or without coordinates.",
+      "zone_no_postcode": "The center of this zone has no known postcode.",
+      "no_location_filter": "Fill in at least one of regio, postcode, capcode or zone.",
+      "cannot_connect": "Could not reach AlarmeringDroid."
+    }
+  },
   "issues": {
     "zone_no_postcode": {
       "title": "Zone center has no known postcode",

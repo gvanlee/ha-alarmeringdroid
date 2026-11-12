@@ -1,4 +1,90 @@
 {
+  "config": {
+    "step": {
+      "user": {
+        "title": "Nieuwe zoekopdracht",
+        "description": "Geef deze zoekopdracht een naam. Je kunt meerdere zoekopdrachten toevoegen.",
+        "data": {
+          "name": "Naam"
+        }
+      },
+      "filters": {
+        "title": "Filters",
+        "description": "Alle filters worden gecombineerd: een melding moet aan elk ingevuld filter voldoen. Binnen één filter (bijvoorbeeld twee regio's) volstaat een van de waarden. Postcodes en de zone gebruiken een straal van 5 km en tellen samen als één locatiefilter.",
+        "data": {
+          "regios": "Regio's",
+          "diensten": "Diensten",
+          "postcodes": "Postcodes",
+          "capcodes": "Capcodes",
+          "zone": "Zone",
+          "prio1_only": "Alleen prioriteit 1",
+          "all_lifeliners": "Alle Lifeliner-meldingen, landelijk (elke regio)"
+        },
+        "data_description": {
+          "regios": "Alleen meldingen uit deze regio's.",
+          "diensten": "Alleen meldingen voor deze diensten (politie, brandweer, ...).",
+          "postcodes": "Kommagescheiden, 4 cijfers of 4 cijfers en 2 letters, bijv. 1234AB, 5678. Straal 5 km.",
+          "capcodes": "Kommagescheiden, 6 tot 9 cijfers.",
+          "zone": "Gebruik de postcode in het midden van deze zone (straal 5 km).",
+          "prio1_only": "Meld alleen meldingen met prioriteit 1.",
+          "all_lifeliners": "Meld ook alle Lifeliner-meldingen, ongeacht de regio."
+        }
+      },
+      "interval": {
+        "title": "Verversingsinterval",
+        "data": {
+          "scan_interval": "Verversingsinterval (seconden)"
+        },
+        "data_description": {
+          "scan_interval": "Hoe vaak op nieuwe meldingen wordt gecontroleerd (minimaal 15)."
+        }
+      }
+    },
+    "error": {
+      "invalid_postcode": "Ongeldige postcode. Gebruik 4 cijfers, eventueel gevolgd door 2 letters.",
+      "invalid_capcode": "Ongeldige capcode. Gebruik 6 tot 9 cijfers.",
+      "zone_not_found": "Zone niet gevonden of zonder coördinaten.",
+      "zone_no_postcode": "Het midden van deze zone heeft geen bekende postcode.",
+      "no_location_filter": "Vul minimaal een van regio, postcode, capcode of zone in.",
+      "cannot_connect": "Kan AlarmeringDroid niet bereiken."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Zoekopties",
+        "description": "Alle filters worden gecombineerd: een melding moet aan elk ingevuld filter voldoen. Binnen één filter (bijvoorbeeld twee regio's) volstaat een van de waarden. Postcodes en de zone gebruiken een straal van 5 km en tellen samen als één locatiefilter.",
+        "data": {
+          "regios": "Regio's",
+          "diensten": "Diensten",
+          "postcodes": "Postcodes",
+          "capcodes": "Capcodes",
+          "zone": "Zone",
+          "prio1_only": "Alleen prioriteit 1",
+          "all_lifeliners": "Alle Lifeliner-meldingen, landelijk (elke regio)",
+          "scan_interval": "Verversingsinterval (seconden)"
+        },
+        "data_description": {
+          "regios": "Alleen meldingen uit deze regio's.",
+          "diensten": "Alleen meldingen voor deze diensten (politie, brandweer, ...).",
+          "postcodes": "Kommagescheiden, 4 cijfers of 4 cijfers en 2 letters, bijv. 1234AB, 5678. Straal 5 km.",
+          "capcodes": "Kommagescheiden, 6 tot 9 cijfers.",
+          "zone": "Gebruik de postcode in het midden van deze zone (straal 5 km).",
+          "prio1_only": "Meld alleen meldingen met prioriteit 1.",
+          "all_lifeliners": "Meld ook alle Lifeliner-meldingen, ongeacht de regio.",
+          "scan_interval": "Hoe vaak op nieuwe meldingen wordt gecontroleerd (minimaal 15)."
+        }
+      }
+    },
+    "error": {
+      "invalid_postcode": "Ongeldige postcode. Gebruik 4 cijfers, eventueel gevolgd door 2 letters.",
+      "invalid_capcode": "Ongeldige capcode. Gebruik 6 tot 9 cijfers.",
+      "zone_not_found": "Zone niet gevonden of zonder coördinaten.",
+      "zone_no_postcode": "Het midden van deze zone heeft geen bekende postcode.",
+      "no_location_filter": "Vul minimaal een van regio, postcode, capcode of zone in.",
+      "cannot_connect": "Kan AlarmeringDroid niet bereiken."
+    }
+  },
   "issues": {
     "zone_no_postcode": {
       "title": "Zonemidden heeft geen bekende postcode",
