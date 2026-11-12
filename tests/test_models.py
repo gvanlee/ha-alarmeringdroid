@@ -148,3 +148,23 @@ def test_as_attributes():
         "postcode", "straat", "timestamp", "prio1", "grip", "brandinfo",
         "capcodes", "parent_id", "url", "longitude",
     }
+
+
+def test_flatten_skips_malformed_entries():
+    bad_id = parent_raw()
+    bad_id["id"] = ""
+    bad_sub = parent_raw()
+    bad_sub["id"] = "100"
+    bad_sub["subitems"] = [None, "x", {"id": "0"}, child_raw()]
+    str_subs = parent_raw()
+    str_subs["id"] = "200"
+    str_subs["subitems"] = "x"
+    caps = parent_raw()
+    caps["id"] = "300"
+    caps["capcodes"] = 5
+    caps["subitems"] = []
+    msgs = flatten_meldingen(
+        [bad_id, None, "junk", bad_sub, str_subs, caps, 7], NOW
+    )
+    assert [m.id for m in msgs] == [100, 200, 300, 3642467]
+    assert msgs[2].capcodes == ()

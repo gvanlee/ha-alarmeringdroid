@@ -4,11 +4,14 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+import logging
 import re
 from typing import Any
 from zoneinfo import ZoneInfo
 
 from .const import MESSAGE_URL
+
+_LOGGER = logging.getLogger(__name__)
 
 TZ = ZoneInfo("Europe/Amsterdam")
 
@@ -140,9 +143,10 @@ def parse_message(raw: dict, parent_id: int | None, now: datetime) -> Message:
     if prefix:
         postcode = postcode or prefix.group(1)
         plaats = plaats[prefix.end():].strip()
+    raw_caps = raw.get("capcodes")
     capcodes = tuple(
         (_text(c.get("capcode")), _text(c.get("omschrijving")))
-        for c in (raw.get("capcodes") or [])
+        for c in (raw_caps if isinstance(raw_caps, list) else [])
         if isinstance(c, dict)
     )
     return Message(
@@ -174,10 +178,18 @@ def flatten_meldingen(raw: list[dict], now: datetime) -> list[Message]:
     """
     by_id: dict[int, Message] = {}
     for item in raw:
-        parent = parse_message(item, None, now)
+        try:
+            parent = parse_message(item, None, now)
+        except (ValueError, TypeError, AttributeError) as err:
+            _LOGGER.debug("Skipping malformed melding %r: %s", item, err)
+            continue
         candidates = [parent]
-        for sub in item.get("subitems") or []:
-            candidates.append(parse_message(sub, parent.id, now))
+        subitems = item.get("subitems")
+        for sub in subitems if isinstance(subitems, list) else []:
+            try:
+                candidates.append(parse_message(sub, parent.id, now))
+            except (ValueError, TypeError, AttributeError) as err:
+                _LOGGER.debug("Skipping malformed subitem %r: %s", sub, err)
         for msg in candidates:
             existing = by_id.get(msg.id)
             if existing is None or (
