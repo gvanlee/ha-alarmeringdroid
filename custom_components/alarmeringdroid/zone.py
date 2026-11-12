@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 from collections.abc import Callable
 import logging
 
@@ -63,6 +64,7 @@ class ZoneResolver:
         self._search_name = search_name
         self._entity_id = entity_id
         self.postcode: str | None = _normalize(postcode)
+        self._task: asyncio.Task[None] | None = None
 
     @property
     def _no_postcode_id(self) -> str:
@@ -109,8 +111,19 @@ class ZoneResolver:
         ir.async_delete_issue(self._hass, DOMAIN, self._no_postcode_id)
         ir.async_delete_issue(self._hass, DOMAIN, self._missing_id)
 
+    @callback
+    def _async_cancel_task(self) -> None:
+        """Cancel an in-flight re-resolve so its result is dropped."""
+        if self._task is not None and not self._task.done():
+            self._task.cancel()
+        self._task = None
+
     def async_start(self) -> Callable[[], None]:
-        """Track the zone; re-resolve when its coordinates change."""
+        """Track the zone; re-resolve when its coordinates change.
+
+        Only the newest re-resolve runs; the returned callback stops tracking
+        and cancels it, so nothing outlives the config entry.
+        """
 
         @callback
         def _changed(event: Event[EventStateChangedData]) -> None:
@@ -123,10 +136,18 @@ class ZoneResolver:
                     == new.attributes.get("longitude")
                 ):
                     return
-            self._hass.async_create_task(
+            self._async_cancel_task()
+            self._task = self._hass.async_create_task(
                 self.async_resolve(), f"alarmeringdroid zone resolve {self._entity_id}"
             )
 
-        return async_track_state_change_event(
+        unsub_track = async_track_state_change_event(
             self._hass, [self._entity_id], _changed
         )
+
+        @callback
+        def _unsubscribe() -> None:
+            unsub_track()
+            self._async_cancel_task()
+
+        return _unsubscribe

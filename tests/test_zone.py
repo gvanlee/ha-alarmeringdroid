@@ -1,5 +1,6 @@
 """Tests for the zone resolver."""
 
+import asyncio
 from unittest.mock import AsyncMock
 
 import pytest
@@ -142,3 +143,54 @@ async def test_initial_postcode_kept_on_api_error(hass: HomeAssistant) -> None:
     assert resolver.postcode == "1234AB"
     await resolver.async_resolve()
     assert resolver.postcode == "1234AB"
+
+
+async def test_unsubscribe_cancels_inflight_resolve(hass: HomeAssistant) -> None:
+    _set_zone(hass)
+    release = asyncio.Event()
+    started = asyncio.Event()
+
+    async def slow_lookup(lat, lon):
+        started.set()
+        await release.wait()
+        return None
+
+    client = AsyncMock()
+    client.lookup_postcode.return_value = "1012AB"
+    resolver = _resolver(hass, client)
+    await resolver.async_resolve()
+    client.lookup_postcode.side_effect = slow_lookup
+    unsub = resolver.async_start()
+    _set_zone(hass, lat=52.40)
+    await started.wait()
+    unsub()
+    release.set()
+    await hass.async_block_till_done()
+    assert resolver.postcode == "1012AB"
+    assert _issue(hass, f"zone_no_postcode_{ENTRY}") is None
+
+
+async def test_newer_move_cancels_stale_resolve(hass: HomeAssistant) -> None:
+    _set_zone(hass)
+    release = asyncio.Event()
+    started = asyncio.Event()
+
+    async def lookup(lat, lon):
+        if lat == 52.40:
+            started.set()
+            await release.wait()
+            return "1111AA"
+        return "2222BB"
+
+    client = AsyncMock()
+    client.lookup_postcode.side_effect = lookup
+    resolver = _resolver(hass, client)
+    unsub = resolver.async_start()
+    _set_zone(hass, lat=52.40)
+    await started.wait()
+    _set_zone(hass, lat=52.50)
+    await asyncio.sleep(0)
+    release.set()
+    await hass.async_block_till_done()
+    assert resolver.postcode == "2222BB"
+    unsub()
