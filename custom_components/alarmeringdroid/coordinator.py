@@ -56,11 +56,10 @@ class AlarmeringDroidCoordinator(DataUpdateCoordinator[Message | None]):
     async def _async_update_data(self) -> Message | None:
         cfg = self._config
         zone_pc = self._zone.postcode if self._zone else None
-        if (
-            self._zone is not None
-            and zone_pc is None
-            and not (cfg.regios or cfg.postcodes or cfg.capcodes)
-        ):
+        if not cfg.has_location:
+            raise UpdateFailed("search has no location filter")
+        if cfg.zone and zone_pc is None:
+            # Polling without the zone would drop an AND-ed location filter.
             raise UpdateFailed("zone postcode not resolved")
 
         minid = self.tracker.cursor if self._primed else None

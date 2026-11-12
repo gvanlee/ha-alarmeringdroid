@@ -39,6 +39,7 @@ from .const import (
     CONF_REGIOS,
     CONF_SCAN_INTERVAL,
     CONF_ZONE,
+    CONF_ZONE_POSTCODE,
     DEFAULT_SCAN_INTERVAL,
     DIENSTEN,
     DOMAIN,
@@ -188,6 +189,8 @@ async def async_validate_filters(
                 errors[CONF_ZONE] = "zone_no_postcode"
         if errors:
             return options, errors
+    # Stored so setup can still apply the zone filter when the lookup fails.
+    options[CONF_ZONE_POSTCODE] = zone_postcode
 
     config = SearchConfig.from_entry_data("", options)
     try:

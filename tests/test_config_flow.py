@@ -72,6 +72,7 @@ async def test_full_flow_creates_entry(hass: HomeAssistant, patched) -> None:
     assert result["options"]["regios"] == [9]
     assert result["options"]["postcodes"] == ["1234AB"]
     assert result["options"]["scan_interval"] == 60
+    assert result["options"]["zone_postcode"] is None
     assert patched[0].await_count == 1
 
 
@@ -119,6 +120,12 @@ async def test_zone_with_postcode_passes_to_find(
     )
     assert result["step_id"] == "interval"
     assert patched[0].await_args.args[0]["postcode"] == ["1234AB"]
+    result = await hass.config_entries.flow.async_configure(
+        flow_id, {"scan_interval": 60}
+    )
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert result["options"]["zone"] == "zone.home"
+    assert result["options"]["zone_postcode"] == "1234AB"
 
 
 async def test_cannot_connect(hass: HomeAssistant, patched) -> None:
@@ -157,6 +164,28 @@ async def test_options_flow_updates(hass: HomeAssistant, patched) -> None:
     assert entry.options["regios"] == [1, 2]
     assert entry.options["postcodes"] == []
     assert entry.options["scan_interval"] == 120
+    assert entry.options["zone_postcode"] is None
+
+
+async def test_options_flow_stores_zone_postcode(
+    hass: HomeAssistant, patched
+) -> None:
+    hass.states.async_set("zone.home", "0", {"latitude": 52.0, "longitude": 4.0})
+    patched[1].return_value = "5678 cd"
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        title="Thuis",
+        data={"name": "Thuis"},
+        options={"regios": [9], "scan_interval": 60},
+    )
+    entry.add_to_hass(hass)
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"], {"zone": "zone.home", "scan_interval": 60}
+    )
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert entry.options["zone"] == "zone.home"
+    assert entry.options["zone_postcode"] == "5678CD"
 
 
 def _keys(obj, prefix=""):

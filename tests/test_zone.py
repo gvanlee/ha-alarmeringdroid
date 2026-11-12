@@ -132,3 +132,13 @@ async def test_reresolve_only_on_coordinate_change(hass: HomeAssistant) -> None:
     await hass.async_block_till_done()
     assert _issue(hass, f"zone_missing_{ENTRY}") is not None
     unsub()
+
+
+async def test_initial_postcode_kept_on_api_error(hass: HomeAssistant) -> None:
+    _set_zone(hass)
+    client = AsyncMock()
+    client.lookup_postcode.side_effect = ApiConnectionError("boom")
+    resolver = ZoneResolver(hass, client, ENTRY, "Thuis", "zone.home", "1234AB")
+    assert resolver.postcode == "1234AB"
+    await resolver.async_resolve()
+    assert resolver.postcode == "1234AB"

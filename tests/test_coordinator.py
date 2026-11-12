@@ -159,14 +159,48 @@ async def test_zone_unresolved_no_request(hass: HomeAssistant) -> None:
     client.find.assert_not_called()
 
 
-async def test_zone_unresolved_with_other_filters_polls(hass: HomeAssistant) -> None:
+async def test_zone_unresolved_with_other_filters_no_request(
+    hass: HomeAssistant,
+) -> None:
+    """Never poll with the zone's AND-ed location filter dropped."""
     client = MagicMock()
     client.find = AsyncMock(return_value=result(raw(10)))
     zone = MagicMock(postcode=None)
+    coord = make(hass, client, config(zone="zone.home", capcodes=("123456",)), zone)
+    await coord.async_refresh()
+    assert coord.last_update_success is False
+    client.find.assert_not_called()
+
+
+async def test_zone_configured_without_resolver_no_request(
+    hass: HomeAssistant,
+) -> None:
+    client = MagicMock()
+    client.find = AsyncMock(return_value=result(raw(10)))
+    coord = make(hass, client, config(zone="zone.home"), None)
+    await coord.async_refresh()
+    assert coord.last_update_success is False
+    client.find.assert_not_called()
+
+
+async def test_no_location_no_request(hass: HomeAssistant) -> None:
+    client = MagicMock()
+    client.find = AsyncMock(return_value=result(raw(10)))
+    coord = make(hass, client, config(regios=(), diensten=(3,)))
+    await coord.async_refresh()
+    assert coord.last_update_success is False
+    client.find.assert_not_called()
+
+
+async def test_zone_resolved_adds_postcode(hass: HomeAssistant) -> None:
+    client = MagicMock()
+    client.find = AsyncMock(return_value=result(raw(10)))
+    zone = MagicMock(postcode="1234AB")
     coord = make(hass, client, config(zone="zone.home"), zone)
     await coord.async_refresh()
     assert coord.last_update_success is True
-    assert "postcode" not in client.find.await_args.args[0]
+    assert client.find.await_args.args[0]["postcode"] == ["1234AB"]
+    assert client.find.await_args.args[0]["regios"] == [9]
 
 
 async def test_cursor_advances_to_high_id(hass: HomeAssistant) -> None:

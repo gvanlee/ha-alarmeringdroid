@@ -55,13 +55,14 @@ class ZoneResolver:
         entry_id: str,
         search_name: str,
         entity_id: str,
+        postcode: str | None = None,
     ) -> None:
         self._hass = hass
         self._client = client
         self._entry_id = entry_id
         self._search_name = search_name
         self._entity_id = entity_id
-        self.postcode: str | None = None
+        self.postcode: str | None = _normalize(postcode)
 
     @property
     def _no_postcode_id(self) -> str:
