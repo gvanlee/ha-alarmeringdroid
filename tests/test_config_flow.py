@@ -175,3 +175,44 @@ def test_translations_have_same_keys() -> None:
     ]
     assert sets[0] == sets[1] == sets[2]
     assert "issues.zone_missing.title" in sets[0]
+
+
+async def test_options_flow_keeps_input_on_error(hass: HomeAssistant) -> None:
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        title="Thuis",
+        data={"name": "Thuis"},
+        options={"regios": [9], "scan_interval": 60},
+    )
+    entry.add_to_hass(hass)
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"],
+        {"postcodes": "12x", "capcodes": "99", "regios": ["2"], "scan_interval": 90},
+    )
+    assert result["errors"]["postcodes"] == "invalid_postcode"
+    suggested = {
+        str(k): k.description["suggested_value"]
+        for k in result["data_schema"].schema
+        if k.description and "suggested_value" in k.description
+    }
+    assert suggested["postcodes"] == "12x"
+    assert suggested["capcodes"] == "99"
+    assert suggested["regios"] == ["2"]
+
+
+async def test_schemas_serialize(hass: HomeAssistant) -> None:
+    from homeassistant.helpers import config_validation as cv
+    import voluptuous_serialize
+
+    from custom_components.alarmeringdroid.config_flow import (
+        _filters_schema,
+        _interval_field,
+    )
+
+    interval = vol.Schema(_interval_field(60))
+    options = _filters_schema().extend(_interval_field(60))
+    for schema in (interval, options):
+        assert voluptuous_serialize.convert(
+            schema, custom_serializer=cv.custom_serializer
+        )

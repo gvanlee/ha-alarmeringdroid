@@ -275,7 +275,7 @@ class AlarmeringDroidOptionsFlow(OptionsFlow):
             if not errors:
                 options[CONF_SCAN_INTERVAL] = int(user_input[CONF_SCAN_INTERVAL])
                 return self.async_create_entry(data=options)
-            current = {**options, CONF_SCAN_INTERVAL: user_input.get(CONF_SCAN_INTERVAL)}
+            current = dict(user_input)
         interval = current.get(CONF_SCAN_INTERVAL) or DEFAULT_SCAN_INTERVAL
         schema = _filters_schema(current).extend(_interval_field(int(interval)))
         return self.async_show_form(step_id="init", data_schema=schema, errors=errors)
