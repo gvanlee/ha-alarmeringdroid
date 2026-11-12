@@ -86,3 +86,42 @@ def test_filter_lifeliners_and_minid():
 def test_capcodes_are_strings():
     r = build_find_filter(_cfg(capcodes=("0126183",)), None, None)
     assert r["capcodes"] == ["0126183"]
+
+
+@pytest.mark.parametrize("bad", [None, "abc"])
+def test_from_entry_bad_interval_uses_default(bad):
+    assert SearchConfig.from_entry_data("x", {"scan_interval": bad}).scan_interval == 60
+
+
+def test_from_entry_bare_strings_not_split_into_chars():
+    c = SearchConfig.from_entry_data(
+        "x",
+        {"postcodes": "1234AB", "capcodes": "0126183", "regios": "9", "diensten": "1,2"},
+    )
+    assert c.postcodes == ("1234AB",)
+    assert c.capcodes == ("0126183",)
+    assert c.regios == (9,)
+    assert c.diensten == (1, 2)
+
+
+def test_from_entry_coerces_elements():
+    c = SearchConfig.from_entry_data(
+        "x", {"regios": ["9"], "capcodes": [126183, "0126183"]}
+    )
+    assert c.regios == (9,)
+    assert c.capcodes == ("126183", "0126183")
+    assert all(isinstance(x, str) for x in c.capcodes)
+
+
+def test_from_entry_renormalizes_and_drops_invalid():
+    c = SearchConfig.from_entry_data(
+        "x",
+        {
+            "postcodes": ["1234 ab", "bogus", "1234AB"],
+            "capcodes": ["12a", "0126183"],
+            "regios": ["x", 3],
+        },
+    )
+    assert c.postcodes == ("1234AB",)
+    assert c.capcodes == ("0126183",)
+    assert c.regios == (3,)

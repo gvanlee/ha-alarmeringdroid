@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass
+import logging
 import re
 from typing import Any
 
@@ -21,6 +22,8 @@ from .const import (
     MIN_SCAN_INTERVAL,
     RADIUS_KM,
 )
+
+_LOGGER = logging.getLogger(__name__)
 
 _POSTCODE_RE = re.compile(r"^[1-9]\d{3}([A-Z]{2})?$")
 _CAPCODE_RE = re.compile(r"^\d{6,9}$")
@@ -43,23 +46,62 @@ class SearchConfig:
     @classmethod
     def from_entry_data(cls, name: str, options: Mapping[str, Any]) -> SearchConfig:
         """Build a config from stored entry options."""
-        interval = options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+        try:
+            interval = int(options.get(CONF_SCAN_INTERVAL))
+        except (TypeError, ValueError):
+            interval = DEFAULT_SCAN_INTERVAL
         return cls(
             name=name,
-            regios=tuple(options.get(CONF_REGIOS) or ()),
-            diensten=tuple(options.get(CONF_DIENSTEN) or ()),
-            postcodes=tuple(options.get(CONF_POSTCODES) or ()),
-            capcodes=tuple(options.get(CONF_CAPCODES) or ()),
+            regios=_int_items(options.get(CONF_REGIOS)),
+            diensten=_int_items(options.get(CONF_DIENSTEN)),
+            postcodes=_norm_items(options.get(CONF_POSTCODES), normalize_postcodes),
+            capcodes=_norm_items(options.get(CONF_CAPCODES), normalize_capcodes),
             zone=options.get(CONF_ZONE) or None,
             prio1_only=bool(options.get(CONF_PRIO1_ONLY, False)),
             all_lifeliners=bool(options.get(CONF_ALL_LIFELINERS, False)),
-            scan_interval=max(MIN_SCAN_INTERVAL, int(interval)),
+            scan_interval=max(MIN_SCAN_INTERVAL, interval),
         )
 
     @property
     def has_location(self) -> bool:
         """Return True if any location criterion is set."""
         return bool(self.regios or self.postcodes or self.capcodes or self.zone)
+
+
+def _items(value: Any) -> list[Any]:
+    """Accept a list/tuple or a comma separated string."""
+    if value is None:
+        return []
+    if isinstance(value, str):
+        return [p.strip() for p in value.split(",") if p.strip()]
+    if isinstance(value, (list, tuple, set, frozenset)):
+        return list(value)
+    return [value]
+
+
+def _int_items(value: Any) -> tuple[int, ...]:
+    result: list[int] = []
+    for item in _items(value):
+        try:
+            number = int(item)
+        except (TypeError, ValueError):
+            _LOGGER.debug("Dropping invalid stored integer %r", item)
+            continue
+        if number not in result:
+            result.append(number)
+    return tuple(result)
+
+
+def _norm_items(value: Any, normalizer: Any) -> tuple[str, ...]:
+    result: list[str] = []
+    for item in _items(value):
+        try:
+            normalized = normalizer(str(item))
+        except ValueError:
+            _LOGGER.debug("Dropping invalid stored value %r", item)
+            continue
+        result.extend(n for n in normalized if n not in result)
+    return tuple(result)
 
 
 def _split(text: str) -> list[str]:
