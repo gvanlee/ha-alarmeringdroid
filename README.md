@@ -49,7 +49,7 @@ AlarmeringDroid is a free service run by volunteers. The interval is never lower
 
 ## Entities
 
-Each search has one sensor, **Most recent message** ("Laatste melding" in Dutch). Its entity ID is based on the name in the language Home Assistant used when the search was added: `sensor.<name>_most_recent_message` in English, `sensor.<name>_laatste_melding` in Dutch. Check **Settings > Devices & services > Entities** for the exact ID. Its state is the message text (at most 255 characters, unknown until a message is seen); the full data is in the attributes. The sensor is unavailable while the API cannot be reached.
+Each search has one sensor, **Most recent message** ("Laatste melding" in Dutch). Its entity ID is based on the name in the language Home Assistant used when the search was added: `sensor.<name>_most_recent_message` in English, `sensor.<name>_laatste_melding` in Dutch. Check **Settings > Devices & services > Entities** for the exact ID. Its state is the readable message text (`text`, at most 255 characters, unknown until a message is seen); the full data is in the attributes. The sensor is unavailable while the API cannot be reached.
 
 ## Event
 
@@ -62,7 +62,9 @@ For every new message the event `alarmeringdroid_message` is fired. Its data con
 | `is_followup` | `true` when the message is a follow-up in an existing incident. |
 | `incident_prio1` | `true` when the message or its incident thread is priority 1 (also for priority 0 follow-ups of a priority 1 incident). |
 | `id` | Message ID. |
-| `melding` | Full message text. |
+| `melding` | Raw P2000 message text as sent to the pagers. |
+| `tekstmelding` | Readable version of the message made by alarmeringdroid.nl (e.g. "Ambulance met gepaste spoed naar Boterdorpseweg, Bergschenhoek"), when available. |
+| `text` | `tekstmelding` when available, otherwise `melding`. Use this one in notifications. |
 | `dienst`, `dienst_id` | Service name and number (1 Politie, 2 Brandweer, 3 Ambulance, 4 KNRM, 5 Lifeliner). |
 | `regio`, `regio_id` | Regio name and number. |
 | `plaats`, `postcode`, `straat` | Place, postcode and street, when known. |
@@ -70,6 +72,7 @@ For every new message the event `alarmeringdroid_message` is fired. Its data con
 | `prio1` | `true` for priority 1. |
 | `grip` | GRIP level (number). |
 | `brandinfo` | Fire brigade extra information, when present. |
+| `details` | Short summary of fire type and size (e.g. "Type: Binnenbrand-Middelgroot"), when present. |
 | `capcodes` | List of `{capcode, omschrijving}`. |
 | `parent_id` | ID of the first message of the incident, for follow-ups. |
 | `url` | Link to the message on alarmeringdroid.nl. |
@@ -128,7 +131,7 @@ actions:
   - action: persistent_notification.create
     data:
       title: "{{ trigger.event.data.dienst }} - {{ trigger.event.data.plaats }}"
-      message: "{{ trigger.event.data.melding }}"
+      message: "{{ trigger.event.data.text }}"
 ```
 
 ## Data source

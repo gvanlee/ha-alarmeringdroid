@@ -64,6 +64,8 @@ class Message:
     capcodes: tuple[tuple[str, str], ...]
     latitude: float | None
     longitude: float | None
+    tekstmelding: str | None = None
+    details: str | None = None
 
     @property
     def thread_id(self) -> int:
@@ -76,6 +78,11 @@ class Message:
         return self.parent_id is not None
 
     @property
+    def text(self) -> str:
+        """Readable text: tekstmelding when present, else the raw melding."""
+        return self.tekstmelding or self.melding
+
+    @property
     def url(self) -> str:
         """Public URL of the message."""
         return MESSAGE_URL.format(id=self.id)
@@ -85,6 +92,8 @@ class Message:
         attrs: dict[str, Any] = {
             "id": self.id,
             "melding": self.melding,
+            "tekstmelding": self.tekstmelding,
+            "text": self.text,
             "dienst": self.dienst,
             "dienst_id": self.dienst_id,
             "regio": self.regio,
@@ -96,6 +105,7 @@ class Message:
             "prio1": self.prio1,
             "grip": self.grip,
             "brandinfo": self.brandinfo,
+            "details": self.details,
             "capcodes": [
                 {"capcode": code, "omschrijving": desc}
                 for code, desc in self.capcodes
@@ -153,6 +163,7 @@ def parse_message(raw: dict, parent_id: int | None, now: datetime) -> Message:
         id=msg_id,
         parent_id=parent_id,
         melding=_text(raw.get("melding")),
+        tekstmelding=_opt(raw.get("tekstmelding")),
         dienst=_text(raw.get("dienst")),
         dienst_id=_int(raw.get("dienstid")),
         regio=_text(raw.get("regio")),
@@ -164,6 +175,7 @@ def parse_message(raw: dict, parent_id: int | None, now: datetime) -> Message:
         prio1=_text(raw.get("prio1")) == "1",
         grip=_int(raw.get("grip")),
         brandinfo=_opt(raw.get("brandinfo")),
+        details=_opt(raw.get("details")),
         capcodes=capcodes,
         latitude=_float(raw.get("lat")),
         longitude=_float(raw.get("lon")),

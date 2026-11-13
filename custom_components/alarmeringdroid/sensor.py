@@ -43,9 +43,9 @@ class MostRecentMessageSensor(
 
     @property
     def native_value(self) -> str | None:
-        """Return the (truncated) message text."""
+        """Return the (truncated) readable message text."""
         data = self.coordinator.data
-        return data.melding[:STATE_MAX_LEN] if data else None
+        return data.text[:STATE_MAX_LEN] if data else None
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:

@@ -17,9 +17,10 @@ OPTIONS = {
 }
 
 
-def raw(id=10, melding="A1 Alkmaar", dienstid="3"):
+def raw(id=10, melding="A1 Alkmaar", dienstid="3", tekstmelding=None):
     return {
-        "id": str(id), "melding": melding, "dienstid": dienstid, "regioid": "9",
+        "id": str(id), "melding": melding, "tekstmelding": tekstmelding,
+        "dienstid": dienstid, "regioid": "9",
         "dienst": "Ambulance", "regio": "Kennemerland", "plaats": "Alkmaar",
         "datum": "12-11", "tijd": "17:15", "prio1": "1", "grip": "0",
         "lat": "52.63", "lon": "4.75", "subitems": [],
@@ -55,6 +56,21 @@ async def setup_entry(hass: HomeAssistant):
     await hass.async_block_till_done()
     for patcher in patchers:
         patcher.stop()
+
+
+async def test_state_prefers_tekstmelding(hass: HomeAssistant, setup_entry) -> None:
+    find = AsyncMock(
+        return_value=FindResult(
+            meldingen=[raw(tekstmelding="Ambulance met spoed naar Alkmaar")],
+            high_id=None,
+        )
+    )
+    entry = await setup_entry(find)
+    await entry.runtime_data.async_refresh()
+    await hass.async_block_till_done()
+    state = hass.states.get(ENTITY)
+    assert state.state == "Ambulance met spoed naar Alkmaar"
+    assert state.attributes["melding"] == "A1 Alkmaar"
 
 
 async def test_state_and_attributes(hass: HomeAssistant, setup_entry) -> None:

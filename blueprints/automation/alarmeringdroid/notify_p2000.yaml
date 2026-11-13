@@ -60,7 +60,7 @@ actions:
     domain: mobile_app
     type: notify
     title: "{{ trigger.event.data.dienst }} – {{ trigger.event.data.plaats }}"
-    message: "{{ trigger.event.data.melding }}"
+    message: "{{ trigger.event.data.text }}"
     data:
       url: "{{ trigger.event.data.url }}"
       clickAction: "{{ trigger.event.data.url }}"

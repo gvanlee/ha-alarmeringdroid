@@ -144,9 +144,10 @@ def test_as_attributes():
     attrs = parse_message(raw, None, NOW).as_attributes()
     assert "latitude" not in attrs
     assert set(attrs) == {
-        "id", "melding", "dienst", "dienst_id", "regio", "regio_id", "plaats",
-        "postcode", "straat", "timestamp", "prio1", "grip", "brandinfo",
-        "capcodes", "parent_id", "url", "longitude",
+        "id", "melding", "tekstmelding", "text", "dienst", "dienst_id",
+        "regio", "regio_id", "plaats", "postcode", "straat", "timestamp",
+        "prio1", "grip", "brandinfo", "details", "capcodes", "parent_id",
+        "url", "longitude",
     }
 
 
@@ -168,3 +169,27 @@ def test_flatten_skips_malformed_entries():
     )
     assert [m.id for m in msgs] == [100, 200, 300, 3642467]
     assert msgs[2].capcodes == ()
+
+
+def test_tekstmelding_and_details():
+    raw = parent_raw()
+    raw["tekstmelding"] = " Ambulance met gepaste spoed naar Hoofddorp "
+    raw["details"] = "Type: Binnenbrand-Middelgroot"
+    m = parse_message(raw, None, NOW)
+    assert m.tekstmelding == "Ambulance met gepaste spoed naar Hoofddorp"
+    assert m.text == "Ambulance met gepaste spoed naar Hoofddorp"
+    assert m.details == "Type: Binnenbrand-Middelgroot"
+    attrs = m.as_attributes()
+    assert attrs["text"] == "Ambulance met gepaste spoed naar Hoofddorp"
+    assert attrs["melding"].startswith("B 12183")
+
+
+def test_text_falls_back_to_melding():
+    for value in (None, "", "   "):
+        raw = parent_raw()
+        raw["tekstmelding"] = value
+        raw["details"] = ""
+        m = parse_message(raw, None, NOW)
+        assert m.tekstmelding is None
+        assert m.details is None
+        assert m.text == m.melding
