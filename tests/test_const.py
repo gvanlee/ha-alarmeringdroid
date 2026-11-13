@@ -22,7 +22,7 @@ def test_manifest_matches_const():
     assert manifest["iot_class"] == "cloud_polling"
     assert manifest["config_flow"] is True
     assert manifest["integration_type"] == "service"
-    assert manifest["version"] == "0.1.0"
+    assert manifest["version"] == "0.1.1"
 
 
 def test_tables():

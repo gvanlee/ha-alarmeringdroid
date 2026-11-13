@@ -16,7 +16,7 @@ from custom_components.alarmeringdroid.const import BASE_URL
 FIXTURES = Path(__file__).parent / "fixtures"
 FIND = re.compile(r".*/find/.*")
 POSTCODE = re.compile(r".*/postcode/.*")
-UA = "HA-AlarmeringDroid/0.1.0"
+UA = "HA-AlarmeringDroid/0.1.1"
 
 
 def load(name: str) -> str:
