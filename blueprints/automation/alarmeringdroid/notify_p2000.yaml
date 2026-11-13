@@ -4,7 +4,7 @@ blueprint:
     Send a push notification to a phone (Home Assistant Companion app) for every
     new P2000 message found by an AlarmeringDroid search.
   domain: automation
-  source_url: https://github.com/OWNER/ha-alarmeringdroid/blob/main/blueprints/automation/alarmeringdroid/notify_p2000.yaml
+  source_url: https://github.com/gvanlee/ha-alarmeringdroid/blob/main/blueprints/automation/alarmeringdroid/notify_p2000.yaml
   input:
     search:
       name: Search

@@ -2,13 +2,13 @@
   "domain": "alarmeringdroid",
   "name": "AlarmeringDroid P2000",
   "after_dependencies": ["zone"],
-  "codeowners": ["@OWNER"],
+  "codeowners": ["@gvanlee"],
   "config_flow": true,
   "dependencies": [],
-  "documentation": "https://github.com/OWNER/ha-alarmeringdroid",
+  "documentation": "https://github.com/gvanlee/ha-alarmeringdroid",
   "integration_type": "service",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/OWNER/ha-alarmeringdroid/issues",
+  "issue_tracker": "https://github.com/gvanlee/ha-alarmeringdroid/issues",
   "requirements": [],
   "version": "0.1.0"
 }

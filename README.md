@@ -13,7 +13,7 @@ A Home Assistant custom integration that follows P2000 pager messages (fire brig
 ### HACS (custom repository)
 
 1. In HACS open the menu (three dots) and choose **Custom repositories**.
-2. Add `https://github.com/OWNER/ha-alarmeringdroid` with type **Integration**.
+2. Add `https://github.com/gvanlee/ha-alarmeringdroid` with type **Integration**.
 3. Install **AlarmeringDroid P2000** and restart Home Assistant.
 
 ### Manual
@@ -82,7 +82,7 @@ For every new message the event `alarmeringdroid_message` is fired. Its data con
 
 ## Blueprint: notification on your phone
 
-[![Import blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2FOWNER%2Fha-alarmeringdroid%2Fblob%2Fmain%2Fblueprints%2Fautomation%2Falarmeringdroid%2Fnotify_p2000.yaml)
+[![Import blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fgvanlee%2Fha-alarmeringdroid%2Fblob%2Fmain%2Fblueprints%2Fautomation%2Falarmeringdroid%2Fnotify_p2000.yaml)
 
 The blueprint "P2000 message → notification" sends a notification via the Home Assistant Companion app. Inputs:
 
