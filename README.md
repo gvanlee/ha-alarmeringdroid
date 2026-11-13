@@ -6,6 +6,8 @@
 
 A Home Assistant custom integration that follows P2000 pager messages (fire brigade, police, ambulance, KNRM and Lifeliner helicopters) via the AlarmeringDroid API. Each configured search gives you a sensor with the most recent matching message and fires an event for every new message, so you can build notifications and automations on top of it.
 
+**Attention: Messages are in Dutch only and only from Dutch services, so mostly useless from abroad**
+
 ## Installation
 
 ### HACS (custom repository)
