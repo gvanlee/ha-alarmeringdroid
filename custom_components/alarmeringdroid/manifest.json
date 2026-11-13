@@ -2,6 +2,7 @@
   "domain": "alarmeringdroid",
   "name": "AlarmeringDroid P2000",
   "after_dependencies": ["zone"],
+  "categories": ["local_services", "weather_alerts.public_warnings"],
   "codeowners": ["@gvanlee"],
   "config_flow": true,
   "dependencies": [],
