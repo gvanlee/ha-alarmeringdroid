@@ -10,11 +10,12 @@ A Home Assistant custom integration that follows P2000 pager messages (fire brig
 
 ## Installation
 
-### HACS (custom repository)
+### HACS
 
-1. In HACS open the menu (three dots) and choose **Custom repositories**.
-2. Add `https://github.com/gvanlee/ha-alarmeringdroid` with type **Integration**.
-3. Install **AlarmeringDroid P2000** and restart Home Assistant.
+[![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=gvanlee&repository=ha-alarmeringdroid&category=integration)
+
+1. Open HACS in Home Assistant and search for **AlarmeringDroid P2000** (or use the button above).
+2. Click **Download** and restart Home Assistant.
 
 ### Manual
 
